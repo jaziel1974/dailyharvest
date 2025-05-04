@@ -1,0 +1,32 @@
+{
+  "common": {
+    "loading": "Carregando...",
+    "error": "Erro",
+    "save": "Salvar",
+    "saving": "Salvando...",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "cancel": "Cancelar",
+    "add": "Adicionar",
+    "confirmDelete": "Tem certeza que deseja excluir esta colheita?"
+  },
+  "harvests": {
+    "title": "Colheitas",
+    "noHarvestsFound": "Nenhuma colheita encontrada",
+    "category": "Categoria",
+    "description": "Descrição",
+    "amount": "Quantidade",
+    "unit": "Unidade",
+    "harvestDate": "Data da Colheita",
+    "actions": "Ações",
+    "selectCategory": "Selecione uma categoria",
+    "selectDescription": "Selecione uma descrição",
+    "loadingDescriptions": "Carregando descrições...",
+    "addNewHarvest": "Adicionar Nova Colheita",
+    "editHarvest": "Editar Colheita",
+    "enterAmount": "Digite a quantidade",
+    "enterNewDescription": "Digite nova descrição",
+    "addNew": "Adicionar Novo",
+    "adding": "Adicionando..."
+  }
+}

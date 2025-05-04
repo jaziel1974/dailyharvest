@@ -1,0 +1,32 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "save": "Guardar",
+    "saving": "Guardando...",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "cancel": "Cancelar",
+    "add": "Agregar",
+    "confirmDelete": "¿Está seguro de que desea eliminar esta cosecha?"
+  },
+  "harvests": {
+    "title": "Cosechas",
+    "noHarvestsFound": "No se encontraron cosechas",
+    "category": "Categoría",
+    "description": "Descripción",
+    "amount": "Cantidad",
+    "unit": "Unidad",
+    "harvestDate": "Fecha de Cosecha",
+    "actions": "Acciones",
+    "selectCategory": "Seleccione una categoría",
+    "selectDescription": "Seleccione una descripción",
+    "loadingDescriptions": "Cargando descripciones...",
+    "addNewHarvest": "Agregar Nueva Cosecha",
+    "editHarvest": "Editar Cosecha",
+    "enterAmount": "Ingrese la cantidad",
+    "enterNewDescription": "Ingrese nueva descripción",
+    "addNew": "Agregar Nuevo",
+    "adding": "Agregando..."
+  }
+}
