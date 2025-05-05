@@ -4,6 +4,7 @@
   "description": "Track your daily harvest amounts and generate reports",
   "start_url": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#ffffff",
   "theme_color": "#0ea5e9",
   "icons": [
@@ -16,10 +17,49 @@
     {
       "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
     }
   ],
-  "orientation": "portrait",
+  "screenshots": [
+    {
+      "src": "/screenshots/mobile-home.png",
+      "sizes": "1170x2532",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshots/desktop-home.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
   "categories": ["productivity", "utilities"],
-  "prefer_related_applications": false
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Add Harvest",
+      "url": "/harvests",
+      "description": "Add a new harvest entry"
+    },
+    {
+      "name": "View Reports",
+      "url": "/reports",
+      "description": "View harvest reports"
+    }
+  ],
+  "related_applications": [],
+  "protocol_handlers": [],
+  "scope": "/",
+  "display_override": ["standalone", "window-controls-overlay"],
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  }
 }

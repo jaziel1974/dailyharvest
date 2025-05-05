@@ -127,250 +127,296 @@ export default function HarvestsPage() {
 
   return (
     <div className="container mx-auto p-4">
-      <div>
-        {/* Harvest Form */}
+      <div className="mb-6">
         <form
           onSubmit={handleSubmit}
-          className="section mb-8 space-y-4 max-w-lg"
+          className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 space-y-4 max-w-lg mx-auto"
         >
-          <div>
-            <label
-              htmlFor="category"
-              className="block text-sm font-medium text-text-secondary mb-1"
-            >
-              {t('harvests.category')}
-            </label>
-            <CategorySelect
-              value={selectedCategory}
-              onChangeAction={(value) => {
-                setSelectedCategory(value);
-                setSelectedDescription("");
-              }}
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="description"
-              className="block text-sm font-medium text-text-secondary mb-1"
-            >
-              {t('harvests.description')}
-            </label>
-            {!isAddingDescription ? (
-              <div className="flex gap-2">
-                <select
-                  id="description"
-                  value={selectedDescription}
-                  onChange={(e) => setSelectedDescription(e.target.value)}
-                  required
-                  className="flex-1 p-2 border rounded-[var(--radius-md)] focus:ring-[var(--primary-color)]"
-                  disabled={!selectedCategory || isLoadingDescriptions}
-                >
-                  <option value="">
-                    {isLoadingDescriptions
-                      ? t('harvests.loadingDescriptions')
-                      : t('harvests.selectDescription')}
-                  </option>
-                  {descriptions?.map((desc: Description) => (
-                    <option key={desc._id} value={desc._id}>
-                      {desc.description}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  type="button"
-                  onClick={() => setIsAddingDescription(true)}
-                  className="btn btn-primary"
-                  disabled={!selectedCategory || isLoadingDescriptions}
-                >
-                  {t('harvests.addNew')}
-                </button>
-              </div>
-            ) : (
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={newDescription}
-                  onChange={(e) => setNewDescription(e.target.value)}
-                  placeholder={t('harvests.enterNewDescription')}
-                  className="flex-1 p-2 border rounded-[var(--radius-md)] focus:ring-[var(--primary-color)]"
-                  disabled={createDescriptionMutation.isPending}
-                />
-                <button
-                  type="button"
-                  onClick={handleCreateDescription}
-                  disabled={
-                    createDescriptionMutation.isPending ||
-                    !newDescription.trim()
-                  }
-                  className="btn btn-primary"
-                >
-                  {createDescriptionMutation.isPending ? (
-                    <span className="flex items-center">
-                      <svg
-                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        />
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        />
-                      </svg>
-                      {t('harvests.adding')}
-                    </span>
-                  ) : (
-                    t('common.save')
-                  )}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setIsAddingDescription(false)}
-                  className="btn bg-background-dark text-text-primary hover:bg-background-light"
-                  disabled={createDescriptionMutation.isPending}
-                >
-                  {t('common.cancel')}
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-4">
             <div>
               <label
-                htmlFor="amount"
-                className="block text-sm font-medium text-text-secondary mb-1"
+                htmlFor="category"
+                className="block text-sm font-medium text-text-secondary mb-2"
               >
-                {t('harvests.amount')}
+                {t('harvests.category')}
               </label>
-              <input
-                type="number"
-                id="amount"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                required
-                min="0"
-                step="any"
-                className="w-full p-2 border rounded-[var(--radius-md)] focus:ring-[var(--primary-color)]"
-                placeholder={t('harvests.enterAmount')}
+              <CategorySelect
+                value={selectedCategory}
+                onChangeAction={(value) => {
+                  setSelectedCategory(value);
+                  setSelectedDescription("");
+                }}
               />
             </div>
 
             <div>
               <label
-                htmlFor="unit"
-                className="block text-sm font-medium text-text-secondary mb-1"
+                htmlFor="description"
+                className="block text-sm font-medium text-text-secondary mb-2"
               >
-                {t('harvests.unit')}
+                {t('harvests.description')}
               </label>
-              <select
-                id="unit"
-                value={unit}
-                onChange={(e) => setUnit(e.target.value)}
-                className="w-full p-2 border rounded-[var(--radius-md)] focus:ring-[var(--primary-color)]"
-              >
-                {units.map((u) => (
-                  <option key={u} value={u}>
-                    {u}
-                  </option>
-                ))}
-              </select>
+              {!isAddingDescription ? (
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <select
+                    id="description"
+                    value={selectedDescription}
+                    onChange={(e) => setSelectedDescription(e.target.value)}
+                    required
+                    className="flex-1 p-3 border rounded-lg text-base focus:ring-[var(--primary-color)]"
+                    disabled={!selectedCategory || isLoadingDescriptions}
+                  >
+                    <option value="">
+                      {isLoadingDescriptions
+                        ? t('harvests.loadingDescriptions')
+                        : t('harvests.selectDescription')}
+                    </option>
+                    {descriptions?.map((desc: Description) => (
+                      <option key={desc._id} value={desc._id}>
+                        {desc.description}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => setIsAddingDescription(true)}
+                    className="btn btn-primary w-full sm:w-auto py-3"
+                    disabled={!selectedCategory || isLoadingDescriptions}
+                  >
+                    {t('harvests.addNew')}
+                  </button>
+                </div>
+              ) : (
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <input
+                    type="text"
+                    value={newDescription}
+                    onChange={(e) => setNewDescription(e.target.value)}
+                    placeholder={t('harvests.enterNewDescription')}
+                    className="flex-1 p-3 border rounded-lg text-base focus:ring-[var(--primary-color)]"
+                    disabled={createDescriptionMutation.isPending}
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={handleCreateDescription}
+                      disabled={
+                        createDescriptionMutation.isPending ||
+                        !newDescription.trim()
+                      }
+                      className="btn btn-primary flex-1 py-3"
+                    >
+                      {createDescriptionMutation.isPending ? (
+                        <span className="flex items-center justify-center">
+                          <svg
+                            className="animate-spin -ml-1 mr-2 h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            />
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            />
+                          </svg>
+                          {t('harvests.adding')}
+                        </span>
+                      ) : (
+                        t('common.save')
+                      )}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setIsAddingDescription(false)}
+                      className="btn bg-background-dark text-text-primary hover:bg-background-light flex-1 py-3"
+                      disabled={createDescriptionMutation.isPending}
+                    >
+                      {t('common.cancel')}
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
 
-          <div>
-            <label
-              htmlFor="harvestDate"
-              className="block text-sm font-medium text-text-secondary mb-1"
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label
+                  htmlFor="amount"
+                  className="block text-sm font-medium text-text-secondary mb-2"
+                >
+                  {t('harvests.amount')}
+                </label>
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  id="amount"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  required
+                  min="0"
+                  step="any"
+                  className="w-full p-3 border rounded-lg text-base focus:ring-[var(--primary-color)]"
+                  placeholder={t('harvests.enterAmount')}
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="unit"
+                  className="block text-sm font-medium text-text-secondary mb-2"
+                >
+                  {t('harvests.unit')}
+                </label>
+                <select
+                  id="unit"
+                  value={unit}
+                  onChange={(e) => setUnit(e.target.value)}
+                  className="w-full p-3 border rounded-lg text-base focus:ring-[var(--primary-color)]"
+                >
+                  {units.map((u) => (
+                    <option key={u} value={u}>
+                      {u}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="harvestDate"
+                className="block text-sm font-medium text-text-secondary mb-2"
+              >
+                {t('harvests.harvestDate')}
+              </label>
+              <input
+                type="date"
+                id="harvestDate"
+                value={harvestDate}
+                onChange={(e) => setHarvestDate(e.target.value)}
+                required
+                className="w-full p-3 border rounded-lg text-base focus:ring-[var(--primary-color)]"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={createHarvestMutation.isPending || !selectedDescription}
+              className="btn btn-primary w-full py-3 text-base font-medium"
             >
-              {t('harvests.harvestDate')}
-            </label>
-            <input
-              type="date"
-              id="harvestDate"
-              value={harvestDate}
-              onChange={(e) => setHarvestDate(e.target.value)}
-              required
-              className="w-full p-2 border rounded-[var(--radius-md)] focus:ring-[var(--primary-color)]"
-            />
+              {createHarvestMutation.isPending ? t('common.saving') : t('common.save')}
+            </button>
           </div>
-
-          <button
-            type="submit"
-            disabled={createHarvestMutation.isPending || !selectedDescription}
-            className="btn btn-primary w-full"
-          >
-            {createHarvestMutation.isPending ? t('common.saving') : t('common.save')}
-          </button>
         </form>
       </div>
 
-      <div className="bg-background-light rounded-lg shadow-sm p-6">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4">
         <h1 className="text-2xl font-bold mb-6 text-text-secondary">{t('harvests.title')}</h1>
 
         {harvests?.length === 0 ? (
-          <p className="text-text-secondary">{t('harvests.noHarvestsFound')}</p>
+          <p className="text-text-secondary text-center py-8">{t('harvests.noHarvestsFound')}</p>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full">
-              <thead>
-                <tr className="border-b">
-                  <th className="py-3 px-4 text-left text-text-secondary">{t('harvests.harvestDate')}</th>
-                  <th className="py-3 px-4 text-left text-text-secondary">{t('harvests.category')}</th>
-                  <th className="py-3 px-4 text-left text-text-secondary">{t('harvests.description')}</th>
-                  <th className="py-3 px-4 text-left text-text-secondary">{t('harvests.amount')}</th>
-                  <th className="py-3 px-4 text-left text-text-secondary">{t('harvests.unit')}</th>
-                  <th className="py-3 px-4 text-left text-text-secondary">{t('harvests.actions')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {harvests?.map((harvest) => (
-                  <tr
-                    key={harvest._id}
-                    className="border-t hover:bg-background-dark transition-all duration-200"
-                  >
-                    <td className="py-2 px-4 text-text-secondary">
-                      {format(new Date(harvest.harvestDate), "MMM d, yyyy")}
-                    </td>
-                    <td className="py-2 px-4 text-text-secondary">
-                      {harvest.description.category.name}
-                    </td>
-                    <td className="py-2 px-4 text-text-secondary">
-                      {harvest.description.description}
-                    </td>
-                    <td className="py-2 px-4 text-text-secondary">
-                      {harvest.amount}
-                    </td>
-                    <td className="py-2 px-4 text-text-secondary">
-                      {harvest.unit}
-                    </td>
-                    <td className="py-2 px-4 text-text-secondary">
-                      <button
-                        onClick={() => handleEdit(harvest)}
-                        className="text-blue-500 hover:text-blue-700 mr-3"
+          <div className="overflow-x-auto -mx-4 sm:mx-0">
+            <div className="inline-block min-w-full align-middle">
+              <div className="overflow-hidden">
+                {/* Large screens table */}
+                <table className="min-w-full divide-y divide-gray-200 hidden sm:table">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="py-3 px-4 text-left text-text-secondary">{t('harvests.harvestDate')}</th>
+                      <th className="py-3 px-4 text-left text-text-secondary">{t('harvests.category')}</th>
+                      <th className="py-3 px-4 text-left text-text-secondary">{t('harvests.description')}</th>
+                      <th className="py-3 px-4 text-left text-text-secondary">{t('harvests.amount')}</th>
+                      <th className="py-3 px-4 text-left text-text-secondary">{t('harvests.unit')}</th>
+                      <th className="py-3 px-4 text-left text-text-secondary">{t('harvests.actions')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {harvests?.map((harvest) => (
+                      <tr
+                        key={harvest._id}
+                        className="border-t hover:bg-background-dark transition-all duration-200"
                       >
-                        {t('common.edit')}
-                      </button>
-                      <button
-                        onClick={() => handleDelete(harvest.id)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        {t('common.delete')}
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                        <td className="py-3 px-4 text-text-secondary">
+                          {format(new Date(harvest.harvestDate), "MMM d, yyyy")}
+                        </td>
+                        <td className="py-3 px-4 text-text-secondary">
+                          {harvest.description.category.name}
+                        </td>
+                        <td className="py-3 px-4 text-text-secondary">
+                          {harvest.description.description}
+                        </td>
+                        <td className="py-3 px-4 text-text-secondary">
+                          {harvest.amount}
+                        </td>
+                        <td className="py-3 px-4 text-text-secondary">
+                          {harvest.unit}
+                        </td>
+                        <td className="py-3 px-4 text-text-secondary">
+                          <button
+                            onClick={() => handleEdit(harvest)}
+                            className="text-blue-500 hover:text-blue-700 mr-3"
+                          >
+                            {t('common.edit')}
+                          </button>
+                          <button
+                            onClick={() => handleDelete(harvest.id)}
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            {t('common.delete')}
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                {/* Mobile cards */}
+                <div className="sm:hidden space-y-4">
+                  {harvests?.map((harvest) => (
+                    <div
+                      key={harvest._id}
+                      className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 space-y-2"
+                    >
+                      <div className="flex justify-between items-start">
+                        <div className="space-y-1">
+                          <p className="text-sm text-gray-500">
+                            {format(new Date(harvest.harvestDate), "MMM d, yyyy")}
+                          </p>
+                          <p className="font-medium">{harvest.description.description}</p>
+                          <p className="text-sm text-gray-600">{harvest.description.category.name}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-bold">{harvest.amount} {harvest.unit}</p>
+                        </div>
+                      </div>
+                      <div className="flex justify-end gap-3 pt-2 border-t">
+                        <button
+                          onClick={() => handleEdit(harvest)}
+                          className="text-blue-500 hover:text-blue-700 px-3 py-1"
+                        >
+                          {t('common.edit')}
+                        </button>
+                        <button
+                          onClick={() => handleDelete(harvest.id)}
+                          className="text-red-500 hover:text-red-700 px-3 py-1"
+                        >
+                          {t('common.delete')}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>

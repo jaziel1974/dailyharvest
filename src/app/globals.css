@@ -30,6 +30,7 @@
   /* Spacing */
   --container-padding: 1rem;
   --section-spacing: 2rem;
+  --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
 
   /* Border radius */
   --radius-sm: 0.25rem;
@@ -51,6 +52,10 @@
   
   --loading-bg: #f3f4f6;
   --loading-highlight: #e5e7eb;
+
+  /* Touch targets */
+  --min-tap-target: 44px;
+  --tap-spacing: 8px;
 }
 
 .dark {
@@ -65,7 +70,7 @@
   --primary-hover: #3b82f6;
   
   /* Text colors */
-  --text-primary: #000000;    /* Light gray text for dark mode */
+  --text-primary: #f3f4f6;    /* Light gray text for dark mode */
   --text-secondary: #d1d5db;  /* Lighter gray for secondary text */
   --text-muted: #9ca3af;      /* Muted gray text */
 
@@ -105,6 +110,8 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    height: 100%;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
@@ -113,11 +120,54 @@
     background-color: var(--bg-primary);
     color: var(--text-primary);
     line-height: 1.5;
+    min-height: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
     @apply font-bold tracking-tight;
+  }
+
+  /* Improve touch targets */
+  button, a, input, select, textarea {
+    touch-action: manipulation;
+  }
+
+  /* Mobile-specific adjustments */
+  @media (max-width: 640px) {
+    input, select, textarea {
+      font-size: 16px !important; /* Prevent zoom on focus in iOS */
+    }
+
+    button, .btn {
+      min-height: var(--min-tap-target);
+      padding-top: var(--tap-spacing);
+      padding-bottom: var(--tap-spacing);
+    }
+  }
+
+  /* Add bottom spacing for iOS safe area */
+  .safe-area-bottom {
+    padding-bottom: var(--safe-area-inset-bottom);
+  }
+
+  /* Improve scrolling */
+  .smooth-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
   }
 }
 
@@ -140,7 +190,8 @@
   .btn-primary {
     @apply bg-[var(--primary-color)] text-white
            hover:bg-[var(--primary-hover)]
-           focus:ring-[var(--primary-color)];
+           focus:ring-[var(--primary-color)]
+           active:transform active:scale-95;
   }
 
   .error-card {
@@ -178,5 +229,37 @@
 
   .bg-hover {
     @apply hover:bg-[var(--bg-hover)];
+  }
+
+  .input-base {
+    @apply w-full px-3 py-2 rounded-md border border-gray-300
+           focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent
+           dark:bg-gray-700 dark:border-gray-600 dark:text-white;
+  }
+
+  .select-base {
+    @apply w-full px-3 py-2 rounded-md border border-gray-300
+           focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent
+           dark:bg-gray-700 dark:border-gray-600 dark:text-white;
+  }
+
+  /* Mobile-optimized cards */
+  .mobile-card {
+    @apply rounded-lg shadow-sm p-4 bg-white dark:bg-gray-800
+           border border-gray-200 dark:border-gray-700;
+  }
+
+  /* Bottom sheet for mobile */
+  .bottom-sheet {
+    @apply fixed inset-x-0 bottom-0 z-50
+           bg-white dark:bg-gray-800
+           rounded-t-2xl shadow-xl
+           transform transition-transform duration-300
+           safe-area-bottom;
+  }
+
+  .bottom-sheet-handle {
+    @apply absolute -top-3 left-1/2 -translate-x-1/2
+           w-12 h-1.5 bg-gray-300 rounded-full;
   }
 }

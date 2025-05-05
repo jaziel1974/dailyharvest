@@ -4,12 +4,15 @@ import { Category } from '@/models/Category';
 import { Description } from '@/models/Description';
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
+import type { IDescription } from '@/utils/descriptions';
 
 describe('Descriptions API', () => {
   let mongoServer: MongoMemoryServer;
 
   beforeAll(async () => {
-    process.env.NODE_ENV = 'test';
+    // Use a different approach to set NODE_ENV for testing
+    Object.defineProperty(process.env, 'NODE_ENV', { value: 'test' });
+    
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
     
@@ -20,10 +23,10 @@ describe('Descriptions API', () => {
     await mongoose.connect(mongoUri);
     
     // Set up global mongoose for the application code
-    (global as any).mongoose = {
-      testUri: mongoUri,
-      conn: mongoose.connection,
-      promise: Promise.resolve(mongoose.connection)
+    global.mongoose = {
+      conn: null,
+      promise: null,
+      testUri: mongoUri
     };
   });
 
@@ -80,8 +83,8 @@ describe('Descriptions API', () => {
 
       expect(response.status).toBe(200);
       expect(data).toHaveLength(2); // Only active descriptions
-      expect(data.map((d: any) => d.description)).toContain('Description 1');
-      expect(data.map((d: any) => d.description)).toContain('Description 2');
+      expect(data.map((d: IDescription) => d.description)).toContain('Description 1');
+      expect(data.map((d: IDescription) => d.description)).toContain('Description 2');
     });
 
     it('should filter descriptions by category when categoryId is provided', async () => {

@@ -3,7 +3,7 @@
 import { NextIntlClientProvider } from 'next-intl';
 
 type Props = {
-  messages: any;
+  messages: Record<string, Record<string, string>>;
   locale: string;
   children: React.ReactNode;
 };

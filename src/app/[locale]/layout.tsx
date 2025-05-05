@@ -14,7 +14,7 @@ const translations = { en, es, pt };
 export const metadata: Metadata = {
   title: 'Daily Harvest Tracker',
   description: 'Track your daily harvest amounts and generate reports',
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no',
+  viewport: 'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5, viewport-fit=cover',
   themeColor: '#0ea5e9',
   manifest: '/manifest.json',
   icons: [

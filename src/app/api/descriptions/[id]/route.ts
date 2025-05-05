@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/utils/db';
 import { Description } from '@/models/Description';
-import { updateDescriptionSchema } from '@/utils/validation';
+import { descriptionUpdateSchema } from '@/utils/validation';
 import { handleError, ValidationError } from '@/middleware/errorHandler';
 import mongoose from 'mongoose';
 
@@ -41,7 +41,7 @@ export async function PUT(
     }
 
     const updates = await request.json();
-    const validatedUpdates = updateDescriptionSchema.parse(updates);
+    const validatedUpdates = descriptionUpdateSchema.parse(updates);
 
     await dbConnect();
     
