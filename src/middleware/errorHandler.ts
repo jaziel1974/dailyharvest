@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import { ApiResponse } from '@/types/api';
+import { NextRequest } from 'next/server';
 
 export class ValidationError extends Error {
   constructor(message: string) {
@@ -41,4 +42,17 @@ export function handleError(error: unknown): NextResponse {
     data: null,
     success: false
   }, { status: 500 });
+}
+
+// Set the default page to the harvests page
+export async function middleware(request: NextRequest) {
+  const url = request.nextUrl.clone();
+
+  // Redirect to the harvests page if the root URL is accessed
+  if (url.pathname === '/') {
+    url.pathname = '/harvests';
+    return NextResponse.redirect(url);
+  }
+
+  return NextResponse.next();
 }
