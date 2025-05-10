@@ -1,25 +1,18 @@
-import createMiddleware from 'next-intl/middleware';
 import { NextResponse } from 'next/server';
-import { NextRequest } from 'next/server';
- 
-// Create the next-intl middleware
-const handleI18nRouting = createMiddleware({
-  locales: ['en', 'es', 'pt'],
-  defaultLocale: 'pt'
-});
+import type { NextRequest } from 'next/server';
 
-export default async function middleware(request: NextRequest) {
-  const pathname = request.nextUrl.pathname;
-  
-  // Redirect / to /pt
-  if (pathname === '/') {
-    return NextResponse.redirect(new URL('/pt', request.url));
+export function middleware(request: NextRequest) {
+  const url = request.nextUrl.clone();
+
+  // Redirect root URL to the harvests page
+  if (url.pathname === '/') {
+    url.pathname = '/harvests';
+    return NextResponse.redirect(url);
   }
-  
-  // Handle i18n routing for all other paths
-  return handleI18nRouting(request);
+
+  return NextResponse.next();
 }
- 
+
 export const config = {
-  matcher: ['/((?!api|_next|.*\\..*).*)']
+  matcher: '/',
 };
