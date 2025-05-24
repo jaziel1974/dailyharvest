@@ -12,10 +12,11 @@ export default function Navigation() {
   const locale = pathname.split('/')[1];
   const isDefaultLocale = locale === 'pt';
 
+  // Always include the locale in the path
   const navLinks = [
-    { href: `${isDefaultLocale ? '' : `/${locale}`}/`, label: 'Home' },
-    { href: `${isDefaultLocale ? '' : `/${locale}`}/harvests`, label: 'Harvests' },
-    { href: `${isDefaultLocale ? '' : `/${locale}`}/reports`, label: 'Reports' },
+    { href: `/${locale}/`, label: 'Home' },
+    { href: `/${locale}/harvests`, label: 'Harvests' },
+    { href: `/${locale}/reports`, label: 'Reports' },
   ];
 
   return (
