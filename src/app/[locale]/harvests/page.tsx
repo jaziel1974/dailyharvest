@@ -49,7 +49,7 @@ export default function HarvestsPage() {
 
   const handleSave = async (formData: EditFormData) => {
     await updateHarvest.mutateAsync({
-      id: editingHarvest!.id,
+      id: editingHarvest!._id,
       ...formData,
     });
     setEditingHarvest(null);
@@ -368,7 +368,7 @@ export default function HarvestsPage() {
                             {t('common.edit')}
                           </button>
                           <button
-                            onClick={() => handleDelete(harvest.id)}
+                            onClick={() => handleDelete(harvest._id)}
                             className="text-red-500 hover:text-red-700"
                           >
                             {t('common.delete')}
@@ -406,7 +406,7 @@ export default function HarvestsPage() {
                           {t('common.edit')}
                         </button>
                         <button
-                          onClick={() => handleDelete(harvest.id)}
+                          onClick={() => handleDelete(harvest._id)}
                           className="text-red-500 hover:text-red-700 px-3 py-1"
                         >
                           {t('common.delete')}

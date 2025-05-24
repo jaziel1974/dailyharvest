@@ -26,6 +26,7 @@ export function useCreateCategory() {
         name: newCategory.name,
         description: newCategory.description,
         status: 'active',
+        order: previousCategories.length + 1,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };

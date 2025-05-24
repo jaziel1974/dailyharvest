@@ -1,7 +1,4 @@
-export interface MetadataValue {
-  type: 'string' | 'number' | 'boolean' | 'date';
-  value: string;
-}
+export type MetadataValue = string | number | boolean;
 
 export interface CategoryResponse {
   _id: string;
@@ -70,4 +67,21 @@ export interface HarvestResponse {
   status: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface BatchOperationRequest {
+  id: string;
+  type: 'create' | 'update' | 'delete';
+  data?: Partial<DescriptionResponse>;
+}
+
+export interface BatchOperationResponse {
+  success: boolean;
+  errors?: { id: string; message: string }[];
+}
+
+export interface ApiResponse<T> {
+  data: T;
+  error: string | null;
+  success: boolean;
 }

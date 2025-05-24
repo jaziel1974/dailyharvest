@@ -4,9 +4,9 @@ import { Harvest } from '@/models/Harvest';
 import { handleError, ValidationError } from '@/middleware/errorHandler';
 
 type Props = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export async function PUT(request: NextRequest, { params }: Props) {

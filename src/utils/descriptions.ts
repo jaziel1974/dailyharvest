@@ -3,14 +3,16 @@ import { Description } from '@/models/Description';
 import { Category } from '@/models/Category';
 import mongoose from 'mongoose';
 
+export type MetadataValue = string | number | boolean;
+
 export interface IDescription {
-  _id?: string;
+  _id?: string | mongoose.Types.ObjectId;
   description: string;
-  category: string;
-  parentId?: string;
+  category: string | mongoose.Types.ObjectId;
+  parentId?: string | mongoose.Types.ObjectId;
   createdBy: string;
-  status: 'active' | 'inactive';
-  metadata?: Record<string, string | number | boolean | null>;
+  status: 'active' | 'inactive' | 'archived';
+  metadata?: Record<string, MetadataValue>;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -20,7 +22,14 @@ export async function getDescriptions(): Promise<IDescription[]> {
   return Description.find({ status: 'active' })
     .populate('category')
     .populate('children')
-    .lean();
+    .lean()
+    .then((descriptions) =>
+      descriptions.map((desc) => ({
+        ...desc,
+        category: desc.category.toString(),
+        parentId: desc.parentId?.toString(),
+      }))
+    );
 }
 
 export async function getDescriptionsByCategory(categoryId: string): Promise<IDescription[]> {
@@ -31,7 +40,14 @@ export async function getDescriptionsByCategory(categoryId: string): Promise<IDe
   })
     .populate('category')
     .populate('children')
-    .lean();
+    .lean()
+    .then((descriptions) =>
+      descriptions.map((desc) => ({
+        ...desc,
+        category: desc.category.toString(),
+        parentId: desc.parentId?.toString(),
+      }))
+    );
 }
 
 export async function getChildDescriptions(parentId: string): Promise<IDescription[]> {
@@ -42,7 +58,14 @@ export async function getChildDescriptions(parentId: string): Promise<IDescripti
   })
     .populate('category')
     .populate('children')
-    .lean();
+    .lean()
+    .then((descriptions) =>
+      descriptions.map((desc) => ({
+        ...desc,
+        category: desc.category.toString(),
+        parentId: desc.parentId?.toString(),
+      }))
+    );
 }
 
 export async function addDescription(
@@ -66,7 +89,11 @@ export async function addDescription(
   });
 
   if (existing) {
-    return existing.toObject();
+    return {
+      ...existing.toObject(),
+      category: existing.category.toString(),
+      parentId: existing.parentId?.toString(),
+    };
   }
 
   // Create new description
@@ -79,7 +106,11 @@ export async function addDescription(
   });
 
   await newDescription.save();
-  return newDescription.toObject();
+  return {
+    ...newDescription.toObject(),
+    category: newDescription.category.toString(),
+    parentId: newDescription.parentId?.toString(),
+  };
 }
 
 export async function updateDescription(
@@ -94,7 +125,11 @@ export async function updateDescription(
   Object.assign(description, updates);
   await description.save();
 
-  return description.toObject();
+  return {
+    ...description.toObject(),
+    category: description.category.toString(),
+    parentId: description.parentId?.toString(),
+  };
 }
 
 export async function deactivateDescription(id: string): Promise<boolean> {

@@ -5,18 +5,26 @@ import { descriptionUpdateSchema } from '@/utils/validation';
 import { handleError, ValidationError } from '@/middleware/errorHandler';
 import mongoose from 'mongoose';
 
+type Props = {
+  params: Promise<{
+    id: string;
+  }>;
+};
+
+
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: Props
 ) {
   try {
-    if (!mongoose.isValidObjectId(params.id)) {
+    const paramsW = await params;
+    if (!mongoose.isValidObjectId(paramsW.id)) {
       throw new ValidationError('Invalid description ID');
     }
 
     await dbConnect();
     
-    const description = await Description.findById(params.id)
+    const description = await Description.findById(paramsW.id)
       .populate('category')
       .populate('children')
       .lean();
@@ -33,10 +41,11 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  {params}: Props
 ) {
+  const paramsW = await params;
   try {
-    if (!mongoose.isValidObjectId(params.id)) {
+    if (!mongoose.isValidObjectId(paramsW.id)) {
       throw new ValidationError('Invalid description ID');
     }
 
@@ -45,7 +54,7 @@ export async function PUT(
 
     await dbConnect();
     
-    const description = await Description.findById(params.id);
+    const description = await Description.findById(paramsW.id);
     if (!description) {
       throw new ValidationError('Description not found');
     }
@@ -53,7 +62,7 @@ export async function PUT(
     Object.assign(description, validatedUpdates);
     await description.save();
 
-    const updatedDescription = await Description.findById(params.id)
+    const updatedDescription = await Description.findById(paramsW.id)
       .populate('category')
       .populate('children')
       .lean();
@@ -66,16 +75,17 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: Props
 ) {
+  const paramsW = await params;
   try {
-    if (!mongoose.isValidObjectId(params.id)) {
+    if (!mongoose.isValidObjectId(paramsW.id)) {
       throw new ValidationError('Invalid description ID');
     }
 
     await dbConnect();
     
-    const description = await Description.findById(params.id);
+    const description = await Description.findById(paramsW.id);
     if (!description) {
       throw new ValidationError('Description not found');
     }
