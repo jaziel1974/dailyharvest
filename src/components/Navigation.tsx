@@ -9,8 +9,7 @@ export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 
   // Extract locale from pathname
-  const locale = pathname.split('/')[1];
-  const isDefaultLocale = locale === 'pt';
+  const locale = pathname.split('/')[1] || 'pt';
 
   // Always include the locale in the path
   const navLinks = [

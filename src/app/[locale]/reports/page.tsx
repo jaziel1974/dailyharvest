@@ -49,7 +49,7 @@ export default function Reports() {
     <main className="min-h-screen p-8 bg-[var(--bg-primary)]">
       <div className="max-w-4xl mx-auto">
         <div className="bg-card rounded-xl shadow-md overflow-hidden p-6 mb-6">
-          <h1 className="text-2xl font-heading font-bold mb-6 text-[var(--text-primary)]">Harvest Reports</h1>
+          <h1 className="text-2xl font-heading font-bold mb-6 text-[var(--text-secondary)]">Harvest Reports</h1>
           
           {/* Filters */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -62,7 +62,7 @@ export default function Reports() {
                 id="startDate"
                 value={filters.startDate}
                 onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
-                className="mt-1 block w-full rounded-lg border-[var(--text-muted)] shadow-sm focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)] bg-[var(--bg-primary)] text-[var(--text-primary)]"
+                className="mt-1 block w-full rounded-lg border-[var(--text-muted)] shadow-sm focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)] bg-[var(--bg-primary)] text-[var(--text-secondary)]"
               />
             </div>
 
@@ -75,7 +75,7 @@ export default function Reports() {
                 id="endDate"
                 value={filters.endDate}
                 onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
-                className="mt-1 block w-full rounded-lg border-[var(--text-muted)] shadow-sm focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)] bg-[var(--bg-primary)] text-[var(--text-primary)]"
+                className="mt-1 block w-full rounded-lg border-[var(--text-muted)] shadow-sm focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)] bg-[var(--bg-primary)] text-[var(--text-secondary)]"
               />
             </div>
 
@@ -87,7 +87,7 @@ export default function Reports() {
                 id="description"
                 value={filters.description}
                 onChange={(e) => setFilters({ ...filters, description: e.target.value })}
-                className="mt-1 block w-full rounded-lg border-[var(--text-muted)] shadow-sm focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)] bg-[var(--bg-primary)] text-[var(--text-primary)] disabled:bg-[var(--bg-secondary)] disabled:text-[var(--text-muted)]"
+                className="mt-1 block w-full rounded-lg border-[var(--text-muted)] shadow-sm focus:border-[var(--primary-color)] focus:ring-[var(--primary-color)] bg-[var(--bg-primary)] text-[var(--text-secondary)] disabled:bg-[var(--bg-secondary)] disabled:text-[var(--text-muted)]"
                 disabled={isLoadingHarvests}
               >
                 <option value="">All descriptions</option>
@@ -102,7 +102,7 @@ export default function Reports() {
 
           {/* Summary Card */}
           <div className="bg-[var(--bg-accent)] rounded-lg p-6 mb-6">
-            <h2 className="text-lg font-heading font-semibold text-[var(--text-primary)] mb-2">Summary</h2>
+            <h2 className="text-lg font-heading font-semibold text-[var(--text-secondary)] mb-2">Summary</h2>
             <div className="text-3xl font-bold text-[var(--primary-color)]">
               Total Amount: {totalAmount.toFixed(2)}
             </div>
@@ -141,19 +141,19 @@ export default function Reports() {
                 <tbody className="bg-[var(--bg-primary)] divide-y divide-[var(--text-muted)]">
                   {filteredHarvests.map((harvest) => (
                     <tr key={harvest._id} className="bg-hover">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--text-primary)]">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--text-secondary)]">
                         {format(new Date(harvest.harvestDate), 'MMM d, yyyy')}
                       </td>
-                      <td className="px-6 py-4 text-sm text-[var(--text-primary)]">
+                      <td className="px-6 py-4 text-sm text-[var(--text-secondary)]">
                         {harvest.description.description}
                       </td>
-                      <td className="px-6 py-4 text-sm text-[var(--text-primary)]">
+                      <td className="px-6 py-4 text-sm text-[var(--text-secondary)]">
                         {harvest.description.category.name}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--text-primary)]">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--text-secondary)]">
                         {harvest.amount.toFixed(2)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--text-primary)]">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-[var(--text-secondary)]">
                         {harvest.unit}
                       </td>
                     </tr>
