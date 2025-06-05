@@ -4,16 +4,15 @@ import { Harvest } from '@/models/Harvest';
 import { handleError, ValidationError } from '@/middleware/errorHandler';
 
 type Props = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export async function PUT(request: NextRequest, { params }: Props) {
   try {
     const body = await request.json();
-    const paramsToBeUsed = await params;
-    const id = paramsToBeUsed.id;
+    const { id } = await params;
 
     if (!id) throw new ValidationError('Harvest ID is required');
     if (body.amount !== undefined && (typeof body.amount !== 'number' || body.amount < 0)) {
@@ -58,8 +57,7 @@ export async function PUT(request: NextRequest, { params }: Props) {
 
 export async function DELETE(request: NextRequest, { params }: Props) {
   try {
-    const paramsToBeUsed = await params;
-    const id = paramsToBeUsed.id;
+    const { id } = await params;
     
     if (!id) {
       throw new ValidationError('Missing harvest ID');

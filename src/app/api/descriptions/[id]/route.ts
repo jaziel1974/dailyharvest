@@ -1,22 +1,23 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/utils/db';
 import { Description } from '@/models/Description';
-import { updateDescriptionSchema } from '@/utils/validation';
+import { descriptionUpdateSchema } from '@/utils/validation';
 import { handleError, ValidationError } from '@/middleware/errorHandler';
 import mongoose from 'mongoose';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    if (!mongoose.isValidObjectId(params.id)) {
+    const { id } = await params;
+    if (!mongoose.isValidObjectId(id)) {
       throw new ValidationError('Invalid description ID');
     }
 
     await dbConnect();
     
-    const description = await Description.findById(params.id)
+    const description = await Description.findById(id)
       .populate('category')
       .populate('children')
       .lean();
@@ -33,19 +34,20 @@ export async function GET(
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    if (!mongoose.isValidObjectId(params.id)) {
+    const { id } = await params;
+    if (!mongoose.isValidObjectId(id)) {
       throw new ValidationError('Invalid description ID');
     }
 
     const updates = await request.json();
-    const validatedUpdates = updateDescriptionSchema.parse(updates);
+    const validatedUpdates = descriptionUpdateSchema.parse(updates);
 
     await dbConnect();
     
-    const description = await Description.findById(params.id);
+    const description = await Description.findById(id);
     if (!description) {
       throw new ValidationError('Description not found');
     }
@@ -53,7 +55,7 @@ export async function PUT(
     Object.assign(description, validatedUpdates);
     await description.save();
 
-    const updatedDescription = await Description.findById(params.id)
+    const updatedDescription = await Description.findById(id)
       .populate('category')
       .populate('children')
       .lean();
@@ -66,16 +68,17 @@ export async function PUT(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    if (!mongoose.isValidObjectId(params.id)) {
+    const { id } = await params;
+    if (!mongoose.isValidObjectId(id)) {
       throw new ValidationError('Invalid description ID');
     }
 
     await dbConnect();
     
-    const description = await Description.findById(params.id);
+    const description = await Description.findById(id);
     if (!description) {
       throw new ValidationError('Description not found');
     }

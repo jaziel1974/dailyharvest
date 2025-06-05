@@ -1,22 +1,14 @@
 import { z } from 'zod';
-import type { MetadataValue } from '@/types/api';
 
 // Base schemas
 const statusEnum = z.enum(['active', 'inactive', 'archived']);
 const objectIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid ObjectId format');
 
-// Recursive metadata schema to match our TypeScript types
-const metadataValueSchema: z.ZodType<MetadataValue> = z.lazy(() => 
-  z.union([
-    z.string(),
-    z.number(),
-    z.boolean(),
-    z.null(),
-    z.undefined(),
-    z.record(z.string(), metadataValueSchema),
-    z.array(metadataValueSchema)
-  ])
-);
+// Metadata value schema to match the MetadataValue interface
+const metadataValueSchema = z.object({
+  type: z.enum(['string', 'number', 'boolean', 'date']),
+  value: z.string()
+});
 
 const metadataSchema = z.record(z.string(), metadataValueSchema).optional();
 

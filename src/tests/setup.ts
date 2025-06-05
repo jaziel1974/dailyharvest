@@ -13,7 +13,8 @@ beforeAll(async () => {
     conn: null,
     promise: null
   };
-  process.env.NODE_ENV = 'test';
+  // Set NODE_ENV for test environment
+  (process.env as any).NODE_ENV = 'test';
   await mongoose.connect(mongoUri);
 });
 
@@ -23,8 +24,11 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  const collections = await mongoose.connection.db.collections();
-  for (const collection of collections) {
-    await collection.deleteMany({});
+  const db = mongoose.connection.db;
+  if (db) {
+    const collections = await db.collections();
+    for (const collection of collections) {
+      await collection.deleteMany({});
+    }
   }
 });

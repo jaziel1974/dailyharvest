@@ -4,18 +4,6 @@ import { useState } from 'react';
 import { useHarvests } from '@/hooks/useHarvests';
 import { format } from 'date-fns';
 
-interface Category {
-  _id: string;
-  name: string;
-  status: string;
-}
-
-interface Description {
-  _id: string;
-  description: string;
-  category: Category;
-  status: string;
-}
 
 export default function Reports() {
   const [filters, setFilters] = useState({

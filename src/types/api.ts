@@ -1,3 +1,9 @@
+export interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  error?: string;
+}
+
 export interface MetadataValue {
   type: 'string' | 'number' | 'boolean' | 'date';
   value: string;
@@ -70,4 +76,16 @@ export interface HarvestResponse {
   status: string;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface BatchOperationRequest {
+  id?: string;
+  type: 'create' | 'update' | 'delete';
+  data?: Partial<CreateDescriptionRequest> | Partial<UpdateDescriptionRequest>;
+}
+
+export interface BatchOperationResponse {
+  success: boolean;
+  errors?: string[];
+  results?: any[];
 }

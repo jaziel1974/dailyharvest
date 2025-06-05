@@ -27,7 +27,8 @@ export function useCreateCategory() {
         description: newCategory.description,
         status: 'active',
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        order: previousCategories.length + 1, 
       };
 
       queryClient.setQueryData(

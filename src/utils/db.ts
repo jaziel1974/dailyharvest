@@ -2,11 +2,12 @@ import mongoose, { Mongoose } from 'mongoose';
 import config from '../config/mongodb.config';
 
 declare global {
+  // eslint-disable-next-line no-var
   var mongoose: {
     conn: Mongoose | null;
     promise: Promise<Mongoose> | null;
     testUri?: string;
-  };
+  } | undefined;
 }
 
 // Don't validate URI in test environment
@@ -18,8 +19,8 @@ if (!config.dbName && process.env.NODE_ENV !== 'test') {
   throw new Error('Please define the MONGODB_DB_NAME environment variable inside .env.local');
 }
 
-const cached = global.mongoose || { conn: null, promise: null };
-global.mongoose = cached;
+const cached = (global as any).mongoose || { conn: null, promise: null };
+(global as any).mongoose = cached;
 
 async function dbConnect(): Promise<Mongoose> {
   if (cached.conn) {
@@ -36,7 +37,7 @@ async function dbConnect(): Promise<Mongoose> {
     try {
       // For test environment, use the testUri from the global object
       const uri = process.env.NODE_ENV === 'test' ? 
-        (global.mongoose?.testUri || cached.testUri) : 
+        ((global as any).mongoose?.testUri || cached.testUri) : 
         config.uri;
 
       if (!uri) {

@@ -3,8 +3,8 @@
 import { NextIntlClientProvider } from 'next-intl';
 
 type Props = {
-  messages: any;
   locale: string;
+  messages: any;
   children: React.ReactNode;
 };
 

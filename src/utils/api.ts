@@ -1,7 +1,6 @@
 import { 
   DescriptionResponse, 
   CategoryResponse, 
-  CategoryCreateRequest,
   CreateDescriptionRequest,
   UpdateDescriptionRequest,
   HarvestResponse

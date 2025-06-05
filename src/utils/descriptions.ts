@@ -1,6 +1,7 @@
 import dbConnect from './db';
 import { Description } from '@/models/Description';
 import { Category } from '@/models/Category';
+import { MetadataValue } from '@/types/api';
 import mongoose from 'mongoose';
 
 export interface IDescription {
@@ -9,40 +10,76 @@ export interface IDescription {
   category: string;
   parentId?: string;
   createdBy: string;
-  status: 'active' | 'inactive';
-  metadata?: Record<string, string | number | boolean | null>;
+  status: 'active' | 'inactive' | 'archived';
+  metadata?: Record<string, MetadataValue>;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 export async function getDescriptions(): Promise<IDescription[]> {
   await dbConnect();
-  return Description.find({ status: 'active' })
+  const descriptions = await Description.find({ status: 'active' })
     .populate('category')
     .populate('children')
     .lean();
+  
+  return descriptions.map((desc: any) => ({
+    _id: desc._id.toString(),
+    description: desc.description,
+    category: desc.category._id.toString(),
+    parentId: desc.parentId?.toString(),
+    createdBy: desc.createdBy,
+    status: desc.status,
+    metadata: desc.metadata,
+    createdAt: desc.createdAt,
+    updatedAt: desc.updatedAt,
+  }));
 }
 
 export async function getDescriptionsByCategory(categoryId: string): Promise<IDescription[]> {
   await dbConnect();
-  return Description.find({ 
+  const descriptions = await Description.find({ 
     category: new mongoose.Types.ObjectId(categoryId),
     status: 'active'
   })
     .populate('category')
     .populate('children')
     .lean();
+  
+  return descriptions.map((desc: any) => ({
+    _id: desc._id.toString(),
+    description: desc.description,
+    category: desc.category._id.toString(),
+    parentId: desc.parentId?.toString(),
+    createdBy: desc.createdBy,
+    status: desc.status,
+    metadata: desc.metadata,
+    createdAt: desc.createdAt,
+    updatedAt: desc.updatedAt,
+  }));
 }
 
 export async function getChildDescriptions(parentId: string): Promise<IDescription[]> {
   await dbConnect();
-  return Description.find({ 
+  const descriptions = await Description.find({ 
     parentId: new mongoose.Types.ObjectId(parentId),
     status: 'active'
   })
     .populate('category')
     .populate('children')
     .lean();
+  
+  return descriptions.map((desc: any) => ({
+    _id: desc._id.toString(),
+    description: desc.description,
+    category: desc.category._id.toString(),
+    parentId: desc.parentId?.toString(),
+    createdBy: desc.createdBy,
+    status: desc.status,
+    metadata: desc.metadata,
+    createdAt: desc.createdAt,
+    updatedAt: desc.updatedAt,
+  }));
 }
 
 export async function addDescription(
@@ -66,7 +103,18 @@ export async function addDescription(
   });
 
   if (existing) {
-    return existing.toObject();
+    const existingObj = existing.toObject() as any;
+    return {
+      _id: existingObj._id.toString(),
+      description: existingObj.description,
+      category: existingObj.category.toString(),
+      parentId: existingObj.parentId?.toString(),
+      createdBy: existingObj.createdBy,
+      status: existingObj.status,
+      metadata: existingObj.metadata,
+      createdAt: existingObj.createdAt,
+      updatedAt: existingObj.updatedAt,
+    };
   }
 
   // Create new description
@@ -79,7 +127,18 @@ export async function addDescription(
   });
 
   await newDescription.save();
-  return newDescription.toObject();
+  const savedObj = newDescription.toObject() as any;
+  return {
+    _id: savedObj._id.toString(),
+    description: savedObj.description,
+    category: savedObj.category.toString(),
+    parentId: savedObj.parentId?.toString(),
+    createdBy: savedObj.createdBy,
+    status: savedObj.status,
+    metadata: savedObj.metadata,
+    createdAt: savedObj.createdAt,
+    updatedAt: savedObj.updatedAt,
+  };
 }
 
 export async function updateDescription(
@@ -94,7 +153,18 @@ export async function updateDescription(
   Object.assign(description, updates);
   await description.save();
 
-  return description.toObject();
+  const savedObj = description.toObject() as any;
+  return {
+    _id: savedObj._id.toString(),
+    description: savedObj.description,
+    category: savedObj.category.toString(),
+    parentId: savedObj.parentId?.toString(),
+    createdBy: savedObj.createdBy,
+    status: savedObj.status,
+    metadata: savedObj.metadata,
+    createdAt: savedObj.createdAt,
+    updatedAt: savedObj.updatedAt,
+  };
 }
 
 export async function deactivateDescription(id: string): Promise<boolean> {

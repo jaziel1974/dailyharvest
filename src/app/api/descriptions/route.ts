@@ -6,7 +6,6 @@ import { descriptionSchema } from '@/utils/validation';
 import { handleError, ValidationError } from '@/middleware/errorHandler';
 import mongoose from 'mongoose';
 import { revalidatePath } from 'next/cache';
-import { headers } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 30; // Revalidate every 30 seconds
@@ -19,7 +18,7 @@ export async function GET(request: Request) {
     
     await dbConnect();
     
-    let query: any = { status: 'active' };
+    const query: any = { status: 'active' };
     
     if (categoryId) {
       if (!mongoose.isValidObjectId(categoryId)) {
