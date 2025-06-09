@@ -14,7 +14,7 @@ import { EditModal } from '@/components/EditModal';
 import { Harvest, EditFormData, Description, CreateDescriptionInput } from '@/types/harvests';
 import { useTranslations } from 'next-intl';
 
-const units = ['piece', 'kg', 'g', 'lb', 'oz', 'bunch'];
+const units = ['unidade', 'kg', 'gramas', 'maço'];
 
 export default function HarvestsPage() {
   const t = useTranslations();

@@ -28,7 +28,7 @@ const harvestSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    enum: ['piece', 'kg', 'g', 'lb', 'oz', 'bunch']
+    enum: ['unidade', 'kg', 'gramas', 'maço']
   },
   harvestDate: {
     type: Date,

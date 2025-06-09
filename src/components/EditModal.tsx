@@ -9,7 +9,7 @@ interface EditModalProps {
   onSave: (formData: EditFormData) => Promise<void>;
 }
 
-const units = ['piece', 'kg', 'g', 'lb', 'oz', 'bunch'];
+const units = ['unidade', 'kg', 'gramas', 'maço'];
 
 export function EditModal({ harvest, isOpen, onClose, onSave }: EditModalProps) {
   const [amount, setAmount] = useState(harvest.amount.toString());

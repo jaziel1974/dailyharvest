@@ -56,7 +56,7 @@ export async function POST(request: Request) {
     if (typeof body.amount !== 'number' || body.amount < 0) {
       throw new ValidationError('Amount must be a non-negative number');
     }
-    if (!body.unit || !['piece', 'kg', 'g', 'lb', 'oz', 'bunch'].includes(body.unit)) {
+    if (!body.unit || !['unidade', 'kg', 'gramas', 'maço'].includes(body.unit)) {
       throw new ValidationError('Invalid unit');
     }
     if (body.harvestDate && isNaN(Date.parse(body.harvestDate))) {
