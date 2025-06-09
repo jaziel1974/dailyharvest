@@ -51,7 +51,7 @@ const harvestSchema = new mongoose.Schema({
     virtuals: true,
     transform: function(doc, ret) {
       ret.id = ret._id;
-      delete ret._id;
+      // Keep _id for compatibility with frontend expectations
       delete ret.__v;
       if (ret.metadata instanceof Map) {
         ret.metadata = Object.fromEntries(ret.metadata);
