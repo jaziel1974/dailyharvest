@@ -24,6 +24,7 @@ export default function HarvestsPage() {
   const deleteHarvest = useDeleteHarvest();
   const createHarvestMutation = useCreateHarvest();
   const [editingHarvest, setEditingHarvest] = useState<Harvest | null>(null);
+  const [deletingHarvestId, setDeletingHarvestId] = useState<string | null>(null);
   
   // Form state
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -58,9 +59,12 @@ export default function HarvestsPage() {
   const handleDelete = async (id: string) => {
     if (confirm(t('common.confirmDelete'))) {
       try {
+        setDeletingHarvestId(id);
         await deleteHarvest.mutateAsync(id);
       } catch (error) {
         console.error('Failed to delete harvest:', error);
+      } finally {
+        setDeletingHarvestId(null);
       }
     }
   };
@@ -133,21 +137,22 @@ export default function HarvestsPage() {
           onSubmit={handleSubmit}
           className="section mb-8 space-y-4 max-w-lg"
         >
-          <div>
-            <label
-              htmlFor="category"
-              className="block text-sm font-medium text-text-secondary mb-1"
-            >
-              {t('harvests.category')}
-            </label>
-            <CategorySelect
-              value={selectedCategory}
-              onChangeAction={(value) => {
-                setSelectedCategory(value);
-                setSelectedDescription("");
-              }}
-            />
-          </div>
+          <fieldset disabled={deleteHarvest.isPending}>
+            <div>
+              <label
+                htmlFor="category"
+                className="block text-sm font-medium text-text-secondary mb-1"
+              >
+                {t('harvests.category')}
+              </label>
+              <CategorySelect
+                value={selectedCategory}
+                onChangeAction={(value) => {
+                  setSelectedCategory(value);
+                  setSelectedDescription("");
+                }}
+              />
+            </div>
 
           <div>
             <label
@@ -306,11 +311,12 @@ export default function HarvestsPage() {
 
           <button
             type="submit"
-            disabled={createHarvestMutation.isPending || !selectedDescription}
+            disabled={createHarvestMutation.isPending || !selectedDescription || deleteHarvest.isPending}
             className="btn btn-primary w-full"
           >
             {createHarvestMutation.isPending ? t('common.saving') : t('common.save')}
           </button>
+          </fieldset>
         </form>
       </div>
 
@@ -325,7 +331,6 @@ export default function HarvestsPage() {
               <thead>
                 <tr className="border-b">
                   <th className="py-3 px-4 text-left text-text-secondary">{t('harvests.harvestDate')}</th>
-                  <th className="py-3 px-4 text-left text-text-secondary">{t('harvests.category')}</th>
                   <th className="py-3 px-4 text-left text-text-secondary">{t('harvests.description')}</th>
                   <th className="py-3 px-4 text-left text-text-secondary">{t('harvests.amount')}</th>
                   <th className="py-3 px-4 text-left text-text-secondary">{t('harvests.unit')}</th>
@@ -333,42 +338,87 @@ export default function HarvestsPage() {
                 </tr>
               </thead>
               <tbody>
-                {harvests?.map((harvest) => (
-                  <tr
-                    key={harvest._id}
-                    className="border-t hover:bg-background-dark transition-all duration-200"
-                  >
-                    <td className="py-2 px-4 text-text-secondary">
-                      {format(new Date(harvest.harvestDate), "MMM d, yyyy")}
-                    </td>
-                    <td className="py-2 px-4 text-text-secondary">
-                      {harvest.description.category.name}
-                    </td>
-                    <td className="py-2 px-4 text-text-secondary">
-                      {harvest.description.description}
-                    </td>
-                    <td className="py-2 px-4 text-text-secondary">
-                      {harvest.amount}
-                    </td>
-                    <td className="py-2 px-4 text-text-secondary">
-                      {harvest.unit}
-                    </td>
-                    <td className="py-2 px-4 text-text-secondary">
-                      <button
-                        onClick={() => handleEdit(harvest)}
-                        className="text-blue-500 hover:text-blue-700 mr-3"
-                      >
-                        {t('common.edit')}
-                      </button>
-                      <button
-                        onClick={() => handleDelete(harvest._id)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        {t('common.delete')}
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {harvests?.map((harvest) => {
+                  const isDeleting = deletingHarvestId === harvest._id;
+                  const isAnyDeleting = deleteHarvest.isPending;
+                  
+                  return (
+                    <tr
+                      key={harvest._id}
+                      className={`border-t transition-all duration-200 ${
+                        isDeleting 
+                          ? 'bg-red-50 opacity-70' 
+                          : isAnyDeleting 
+                            ? 'opacity-50' 
+                            : 'hover:bg-background-dark'
+                      }`}
+                    >
+                      <td className="py-2 px-4 text-text-secondary">
+                        {format(new Date(harvest.harvestDate), "MMM d, yyyy")}
+                      </td>
+                      <td className="py-2 px-4 text-text-secondary">
+                        {harvest.description.description}
+                      </td>
+                      <td className="py-2 px-4 text-text-secondary">
+                        {harvest.amount}
+                      </td>
+                      <td className="py-2 px-4 text-text-secondary">
+                        {harvest.unit}
+                      </td>
+                      <td className="py-2 px-4 text-text-secondary">
+                        {isDeleting ? (
+                          <div className="flex items-center text-red-600">
+                            <svg
+                              className="animate-spin -ml-1 mr-2 h-4 w-4"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                              />
+                              <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                              />
+                            </svg>
+                            {t('common.deleting')}
+                          </div>
+                        ) : (
+                          <>
+                            <button
+                              onClick={() => handleEdit(harvest)}
+                              disabled={isAnyDeleting}
+                              className={`mr-3 ${
+                                isAnyDeleting 
+                                  ? 'text-gray-400 cursor-not-allowed'
+                                  : 'text-blue-500 hover:text-blue-700'
+                              }`}
+                            >
+                              {t('common.edit')}
+                            </button>
+                            <button
+                              onClick={() => handleDelete(harvest._id)}
+                              disabled={isAnyDeleting}
+                              className={`${
+                                isAnyDeleting 
+                                  ? 'text-gray-400 cursor-not-allowed'
+                                  : 'text-red-500 hover:text-red-700'
+                              }`}
+                            >
+                              {t('common.delete')}
+                            </button>
+                          </>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
