@@ -29,3 +29,5 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+public/workbox-f1770938.js
+public/sw.js
