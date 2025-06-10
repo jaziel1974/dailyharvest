@@ -65,8 +65,9 @@ export async function POST(request: Request) {
 
     await dbConnect();
     
-    // Create a date object that preserves the local date
-    const harvestDate = body.harvestDate ? new Date(body.harvestDate + 'T00:00:00') : new Date();
+    // Create a date object that preserves the local date by setting it to noon UTC
+    // This avoids timezone conversion issues that could shift the date by ±1 day
+    const harvestDate = body.harvestDate ? new Date(body.harvestDate + 'T12:00:00.000Z') : new Date();
     
     const harvest = await Harvest.create({
       description: body.descriptionId,

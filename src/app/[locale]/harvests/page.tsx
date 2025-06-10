@@ -30,7 +30,7 @@ export default function HarvestsPage() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedDescription, setSelectedDescription] = useState("");
   const [amount, setAmount] = useState("");
-  const [unit, setUnit] = useState<string>("piece");
+  const [unit, setUnit] = useState<string>("unidade");
   const [harvestDate, setHarvestDate] = useState(format(new Date(), 'yyyy-MM-dd'));
   const [isAddingDescription, setIsAddingDescription] = useState(false);
   const [newDescription, setNewDescription] = useState("");
@@ -82,7 +82,7 @@ export default function HarvestsPage() {
       });
       // Reset form
       setAmount('');
-      setUnit('piece');
+      setUnit('unidade');
       setSelectedDescription('');
       setHarvestDate(format(new Date(), 'yyyy-MM-dd'));
     } catch (error) {

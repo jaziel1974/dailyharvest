@@ -27,16 +27,19 @@ export async function PUT(request: NextRequest, { params }: Props) {
     
     await dbConnect();
     
+    // Process harvestDate to avoid timezone issues
+    const updateData: any = {};
+    if (body.descriptionId) updateData.description = body.descriptionId;
+    if (body.amount !== undefined) updateData.amount = body.amount;
+    if (body.unit) updateData.unit = body.unit;
+    if (body.harvestDate) {
+      // Set to noon UTC to avoid timezone conversion issues
+      updateData.harvestDate = new Date(body.harvestDate + 'T12:00:00.000Z');
+    }
+    
     const harvest = await Harvest.findByIdAndUpdate(
       id,
-      {
-        $set: {
-          ...(body.descriptionId && { description: body.descriptionId }),
-          ...(body.amount !== undefined && { amount: body.amount }),
-          ...(body.unit && { unit: body.unit }),
-          ...(body.harvestDate && { harvestDate: body.harvestDate })
-        }
-      },
+      { $set: updateData },
       { new: true }
     ).populate({
       path: 'description',
