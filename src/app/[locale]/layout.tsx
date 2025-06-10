@@ -37,14 +37,14 @@ export const metadata: Metadata = {
   }
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: { locale: string };
+  params: Promise<{ locale: string }>;
 }) {
-  const locale = params?.locale || 'pt';
+  const { locale } = await params || { locale: 'pt' };
 
   return (
     <html lang={locale}>
